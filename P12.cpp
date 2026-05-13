@@ -5,54 +5,36 @@
 #define se second
 using namespace std;
 
-int k, n, m;
-struct nhan {
-    int x, y, diff;
-    nhan(int _x = 0, int _y = 0, int _diff = 0): x(_x), y(_y), diff(_diff) {}
-    bool operator < (const nhan& other) const {
-        return diff > other.diff;
-    }
-};
-nhan a[1005];
-int L[1005], R[1005];
+/*
+Area = a => cạnh = sqrt(a)
+=> b^2 + c^2 = a
+*/
 
 signed main() {
     ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-    memset(L, -0x3f, sizeof L);
-    memset(R, -0x3f, sizeof R);
-
-    cin >> k >> n >> m;
-    for(int i = 1; i <= k; i++) {
-        cin >> a[i].x >> a[i].y;
-        a[i].diff = a[i].x - a[i].y;
-    }
-    sort(a + 1, a + k + 1);
-    priority_queue<int, vector<int>, greater<int> > pq;
-    int sum = 0;
-    for(int i = 1; i <= k; i++) {
-        pq.push(a[i].x);
-        sum += a[i].x;
-        while(pq.size() > n) {
-            sum -= pq.top();
-            pq.pop();
+    int a; cin >> a;
+    bool ok = 0;
+    for(int b = 0; b * b <= a; b++) {
+        for(int c = 0; c * c <= a - b * b; c++) {
+            if(b * b + c * c == a) {
+                ok = 1;
+                int x = 0;
+                int y = 0;
+                cout << x << " " << y << "\n";
+                x += b;
+                y += c;
+                cout << x << " " << y << "\n";
+                x += c;
+                y -= b;
+                cout << x << " " << y << "\n";
+                x -= b;
+                y -= c;
+                cout << x << " " << y << "\n";
+                ok = 1;
+                break;
+            }
         }
-        if(pq.size() == n) L[i] = sum;
     }
-    while(pq.size()) pq.pop();
-    sum = 0;
-    for(int i = k; i >= 1; i--) {
-        pq.push(a[i].y);
-        sum += a[i].y;
-        while(pq.size() > m) {
-            sum -= pq.top();
-            pq.pop();
-        }
-        if(pq.size() == m) R[i] = sum;
-    }
-    int res = 0;
-    for(int i = 0; i <= k; i++) {
-        res = max(res, L[i] + R[i + 1]);
-    }
-    cout << res;
+    if(ok == 0) cout << "Impossible";
 }
